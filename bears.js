@@ -9,15 +9,34 @@ var connection = mysql.createConnection ({
 
 connection.connect();
 
-connection.query('SELECT * FROM happy_bears;',
+var showBears = function(){
+  connection.query('SELECT * FROM happy_bears;',
   function(err, rows,fields) {
     if(err) throw err;
-
     console.log(rows);
-    
-    // for (var i=0; i <rows.length; i++) {
-    //    console.log('The Name of the bear is: ' + rows[i].name + " favourite Food is :" + rows[i].favourite_food + " and Personality is :"+rows[i].personality);
-    // }
   });
+}
+
+var addBears = function(){
+  var query = "INSERT INTO happy_bears (name,favourite_food,personality) VALUES (?,?,?)";
+  var bear = ["Mike Ditta","Steak","Rough"];
+  connection.query(query,bear, function(err,results) {
+    if(err) {throw err;}
+   console.log("Inserted the bear");
+  });
+}
+
+var deleteBears = function(){
+  var query = "DELETE from happy_bears where id=?";
+  var idToBeDeleted = process.argv[2];
+  connection.query(query,idToBeDeleted,function(err,results){
+    if (err) {throw err;}
+    console.log("Bear "+idToBeDeleted + "was deleted");
+  })
+}
+// addBears();
+showBears();
+// deleteBears();
+
 
 connection.end();
